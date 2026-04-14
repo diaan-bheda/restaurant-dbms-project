@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Spice Hub & Pizza World</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --flame:#FF4D1C;--gold:#FFB800;--lime:#A8E63D;--teal:#00C9B1;
+    --ink:#0F0E0A;--cream:#FFF8EF;--card:#1A1915;--muted:#7A7060;
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:'DM Sans',sans-serif;background:var(--ink);color:var(--cream);overflow-x:hidden}
+
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1.2rem 4rem;background:rgba(15,14,10,0.85);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,0.06)}
+  .nav-logo{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:900;background:linear-gradient(90deg,var(--flame),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+  .nav-links{display:flex;gap:2.5rem;list-style:none}
+  .nav-links a{color:rgba(255,248,239,0.7);text-decoration:none;font-size:0.9rem;font-weight:500;letter-spacing:0.05em;text-transform:uppercase;transition:color 0.2s}
+  .nav-links a:hover{color:var(--gold)}
+  .nav-cta{background:var(--flame);color:#fff;border:none;padding:0.6rem 1.6rem;border-radius:999px;font-family:'DM Sans',sans-serif;font-size:0.9rem;font-weight:600;cursor:pointer;transition:transform 0.2s,background 0.2s}
+  .nav-cta:hover{background:var(--gold);transform:scale(1.04)}
+
+  .hero{min-height:100vh;display:grid;grid-template-columns:1fr 1fr;align-items:center;padding:0 4rem;padding-top:80px;position:relative;overflow:hidden}
+  .hero-bg{position:absolute;inset:0;z-index:0;background:radial-gradient(ellipse 60% 70% at 80% 50%,rgba(255,77,28,0.18) 0%,transparent 70%),radial-gradient(ellipse 40% 50% at 20% 80%,rgba(255,184,0,0.12) 0%,transparent 60%)}
+  .hero-left{position:relative;z-index:1}
+  .hero-tag{display:inline-flex;align-items:center;gap:0.5rem;background:rgba(255,184,0,0.12);border:1px solid rgba(255,184,0,0.3);padding:0.35rem 1rem;border-radius:999px;font-size:0.8rem;font-weight:600;color:var(--gold);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:1.5rem}
+  .hero-tag::before{content:"●";font-size:0.5rem}
+  h1{font-family:'Playfair Display',serif;font-size:clamp(3rem,6vw,5.5rem);font-weight:900;line-height:1.0;letter-spacing:-0.03em}
+  h1 em{font-style:italic;color:var(--flame)}
+  .hero-sub{margin-top:1.5rem;font-size:1.1rem;color:rgba(255,248,239,0.6);max-width:420px;line-height:1.7}
+  .hero-btns{display:flex;gap:1rem;margin-top:2.5rem}
+  .btn-primary{background:var(--flame);color:#fff;padding:0.9rem 2rem;border-radius:999px;font-weight:600;font-size:1rem;border:none;cursor:pointer;transition:transform 0.2s,box-shadow 0.2s;box-shadow:0 8px 30px rgba(255,77,28,0.4);text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem}
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 12px 40px rgba(255,77,28,0.5)}
+  .btn-ghost{background:transparent;color:var(--cream);padding:0.9rem 2rem;border-radius:999px;font-weight:600;font-size:1rem;border:1px solid rgba(255,248,239,0.25);cursor:pointer;transition:border-color 0.2s,color 0.2s;text-decoration:none}
+  .btn-ghost:hover{border-color:var(--gold);color:var(--gold)}
+  .hero-stats{display:flex;gap:2.5rem;margin-top:3rem}
+  .stat-val{font-family:'Playfair Display',serif;font-size:2rem;font-weight:700;color:var(--gold)}
+  .stat-label{font-size:0.8rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-top:0.1rem}
+  .hero-right{position:relative;z-index:1;display:flex;justify-content:center;align-items:center}
+  .hero-card-stack{position:relative;width:380px;height:480px}
+  .hcard{position:absolute;border-radius:24px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,0.6)}
+  .hcard-main{width:320px;height:400px;top:40px;left:30px;background:linear-gradient(145deg,#2a1a0e,#1a0f06);border:1px solid rgba(255,184,0,0.2);display:flex;flex-direction:column;justify-content:flex-end;padding:1.5rem;animation:float 4s ease-in-out infinite}
+  .hcard-accent{width:200px;height:250px;top:0;right:0;background:linear-gradient(145deg,var(--flame),#ff8c00);display:flex;flex-direction:column;justify-content:center;align-items:center;animation:float 4s 1s ease-in-out infinite}
+  .food-emoji{font-size:5rem;margin-bottom:0.5rem}
+  .dish-name{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700}
+  .dish-price{color:var(--gold);font-size:1.1rem;font-weight:600;margin-top:0.25rem}
+  @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+
+  .marquee-wrap{background:var(--flame);overflow:hidden;padding:0.8rem 0;white-space:nowrap}
+  .marquee-inner{display:inline-flex;gap:3rem;animation:marquee 20s linear infinite}
+  .marquee-item{font-family:'Space Mono',monospace;font-size:0.85rem;color:rgba(255,255,255,0.9);letter-spacing:0.05em;display:flex;align-items:center;gap:1rem}
+  .marquee-item::after{content:"✦";color:rgba(255,255,255,0.5)}
+  @keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+  section{padding:6rem 4rem}
+  .section-tag{display:inline-flex;align-items:center;gap:0.5rem;font-size:0.75rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--teal);margin-bottom:1rem}
+  .section-tag::before{content:"";display:block;width:24px;height:2px;background:var(--teal)}
+  h2{font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3.2rem);font-weight:900;line-height:1.1;letter-spacing:-0.02em}
+  h2 span{color:var(--flame);font-style:italic}
+
+  /* MENU */
+  .menu{background:var(--ink)}
+  .menu-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:3rem}
+  .menu-tabs{display:flex;gap:0.5rem}
+  .tab{padding:0.5rem 1.25rem;border-radius:999px;border:1px solid rgba(255,248,239,0.15);background:transparent;color:rgba(255,248,239,0.5);cursor:pointer;font-family:'DM Sans',sans-serif;font-size:0.85rem;font-weight:500;transition:all 0.2s}
+  .tab.active{background:var(--flame);color:#fff;border-color:var(--flame)}
+  .tab:hover:not(.active){border-color:var(--gold);color:var(--gold)}
+  .menu-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
+  .menu-card{background:var(--card);border-radius:20px;overflow:hidden;border:1px solid rgba(255,255,255,0.06);transition:transform 0.3s,box-shadow 0.3s;cursor:pointer}
+  .menu-card:hover{transform:translateY(-6px);box-shadow:0 20px 50px rgba(0,0,0,0.5)}
+  .menu-card-img{height:180px;display:flex;align-items:center;justify-content:center;font-size:4.5rem;background:linear-gradient(135deg,#1e1a14,#2a2218)}
+  .menu-card-body{padding:1.25rem}
+  .menu-card-top{display:flex;justify-content:space-between;align-items:flex-start}
+  .menu-card-name{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700}
+  .menu-card-price{color:var(--gold);font-weight:700;font-size:1.05rem;font-family:'Space Mono',monospace}
+  .menu-card-desc{font-size:0.82rem;color:var(--muted);margin-top:0.4rem;line-height:1.5}
+  .menu-card-footer{display:flex;justify-content:space-between;align-items:center;margin-top:1rem}
+  .menu-badge{font-size:0.7rem;font-weight:700;padding:0.2rem 0.6rem;border-radius:999px;letter-spacing:0.06em;text-transform:uppercase}
+  .badge-indian{background:rgba(255,184,0,0.15);color:var(--gold)}
+  .badge-italian{background:rgba(0,201,177,0.15);color:var(--teal)}
+  .add-btn{width:32px;height:32px;border-radius:50%;background:var(--flame);border:none;color:#fff;font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform 0.15s,background 0.15s}
+  .add-btn:hover{background:var(--gold);transform:scale(1.15)}
+  .loading{text-align:center;color:var(--muted);padding:3rem;font-size:1rem}
+
+  /* STATS */
+  .stats-bar{background:#13110d;padding:3rem 4rem;display:grid;grid-template-columns:repeat(4,1fr);gap:2rem;text-align:center}
+  .stat-box .val{font-family:'Playfair Display',serif;font-size:2.5rem;font-weight:900;color:var(--gold)}
+  .stat-box .lbl{font-size:0.8rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-top:0.25rem}
+
+  /* RESERVATION */
+  .reservation{background:var(--cream);color:var(--ink)}
+  .res-grid{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center}
+  .res-form{background:white;border-radius:24px;padding:2.5rem;box-shadow:0 20px 60px rgba(0,0,0,0.08)}
+  .res-form h3{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;margin-bottom:1.5rem}
+  .form-group{margin-bottom:1.25rem}
+  .form-group label{display:block;font-size:0.8rem;font-weight:600;color:var(--muted);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:0.4rem}
+  .form-group input,.form-group select{width:100%;padding:0.75rem 1rem;border-radius:12px;border:1.5px solid #e8e0d5;font-family:'DM Sans',sans-serif;font-size:0.95rem;background:#faf7f3;color:var(--ink);outline:none;transition:border-color 0.2s}
+  .form-group input:focus,.form-group select:focus{border-color:var(--flame)}
+  .form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+  .res-info h2{color:var(--ink)}
+  .res-info p{color:#5a5045;line-height:1.8;margin-top:1.2rem}
+  .contact-item{display:flex;align-items:center;gap:0.75rem;font-size:0.95rem;color:#4a4035;margin-top:0.75rem}
+  .contact-icon{width:36px;height:36px;border-radius:10px;background:rgba(255,77,28,0.1);display:flex;align-items:center;justify-content:center;font-size:1rem}
+  .success-msg{background:rgba(168,230,61,0.15);border:1px solid var(--lime);color:#3a6600;padding:1rem;border-radius:12px;margin-top:1rem;display:none;text-align:center;font-weight:600}
+
+  /* REVIEWS */
+  .reviews{background:var(--ink)}
+  .reviews-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-top:3rem}
+  .review-card{background:var(--card);border-radius:20px;padding:1.75rem;border:1px solid rgba(255,255,255,0.05);transition:transform 0.2s}
+  .review-card:hover{transform:translateY(-4px)}
+  .stars{color:var(--gold);font-size:1rem;margin-bottom:1rem;letter-spacing:0.1em}
+  .review-text{font-size:0.95rem;color:rgba(255,248,239,0.75);line-height:1.7;font-style:italic}
+  .review-author{display:flex;align-items:center;gap:0.75rem;margin-top:1.25rem}
+  .author-avatar{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.1rem;font-weight:700;color:#fff}
+  .author-name{font-weight:600;font-size:0.9rem}
+  .author-loc{font-size:0.78rem;color:var(--muted);margin-top:0.1rem}
+
+  footer{background:#080706;padding:4rem 4rem 2rem;border-top:1px solid rgba(255,255,255,0.06)}
+  .footer-bottom{border-top:1px solid rgba(255,255,255,0.06);padding-top:1.5rem;display:flex;justify-content:space-between;align-items:center;margin-top:2rem}
+  .footer-bottom p{font-size:0.8rem;color:var(--muted)}
+
+  #toast{position:fixed;bottom:2rem;right:2rem;z-index:999;background:var(--flame);color:#fff;padding:0.9rem 1.5rem;border-radius:16px;font-weight:600;font-size:0.95rem;box-shadow:0 8px 30px rgba(255,77,28,0.4);transform:translateY(100px);opacity:0;transition:transform 0.3s,opacity 0.3s}
+  #toast.show{transform:translateY(0);opacity:1}
+  #toast.success{background:#3a9e00}
+
+  @media(max-width:900px){nav{padding:1rem 1.5rem}.nav-links{display:none}.hero{grid-template-columns:1fr;padding:1.5rem;padding-top:80px}.hero-right{display:none}section{padding:4rem 1.5rem}.res-grid{grid-template-columns:1fr}.menu-grid,.reviews-grid{grid-template-columns:1fr}.stats-bar{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">SpiceHub🍛</div>
+  <ul class="nav-links">
+    <li><a href="#menu">Menu</a></li>
+    <li><a href="#stats">Stats</a></li>
+    <li><a href="#reservation">Reserve</a></li>
+    <li><a href="#reviews">Reviews</a></li>
+  </ul>
+  <button class="nav-cta" onclick="scrollTo({top:document.getElementById('reservation').offsetTop,behavior:'smooth'})">Book a Table</button>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-bg"></div>
+  <div class="hero-left">
+    <div class="hero-tag">Now Open in Mumbai</div>
+    <h1>Where Every<br/><em>Bite</em> Tells<br/>a Story</h1>
+    <p class="hero-sub">Authentic Indian & Italian cuisine delivered to your doorstep or savoured in our restaurants across Mumbai.</p>
+    <div class="hero-btns">
+      <a href="#menu" class="btn-primary">🍽️ Explore Menu</a>
+      <a href="#reservation" class="btn-ghost">Reserve a Table</a>
+    </div>
+    <div class="hero-stats">
+      <div><div class="stat-val" id="hero-orders">—</div><div class="stat-label">Orders</div></div>
+      <div><div class="stat-val" id="hero-customers">—</div><div class="stat-label">Customers</div></div>
+      <div><div class="stat-val" id="hero-rating">—★</div><div class="stat-label">Avg Rating</div></div>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-card-stack">
+      <div class="hcard hcard-accent">
+        <div class="food-emoji">🍕</div>
+        <div style="font-family:'Space Mono',monospace;font-size:0.75rem;color:rgba(255,255,255,0.8);text-align:center">Pizza World<br/>SPECIAL</div>
+      </div>
+      <div class="hcard hcard-main">
+        <div class="dish-name">Paneer Butter Masala</div>
+        <div class="dish-price">₹250</div>
+        <div style="display:inline-block;background:rgba(168,230,61,0.2);color:var(--lime);font-size:0.7rem;font-weight:600;padding:0.2rem 0.6rem;border-radius:999px;margin-top:0.5rem">🌿 Vegetarian</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee-inner">
+    <span class="marquee-item">Free delivery over ₹499</span>
+    <span class="marquee-item">Spice Hub — Vile Parle W</span>
+    <span class="marquee-item">Pizza World — Andheri</span>
+    <span class="marquee-item">Open 11am – 11pm daily</span>
+    <span class="marquee-item">Table reservations available</span>
+    <span class="marquee-item">UPI · Card · Cash on delivery</span>
+    <span class="marquee-item">Free delivery over ₹499</span>
+    <span class="marquee-item">Spice Hub — Vile Parle W</span>
+    <span class="marquee-item">Pizza World — Andheri</span>
+    <span class="marquee-item">Open 11am – 11pm daily</span>
+    <span class="marquee-item">Table reservations available</span>
+    <span class="marquee-item">UPI · Card · Cash on delivery</span>
+  </div>
+</div>
+
+<!-- MENU (live from DB) -->
+<section class="menu" id="menu">
+  <div class="menu-header">
+    <div>
+      <div class="section-tag">Live from Database</div>
+      <h2>Our <span>Signature</span> Dishes</h2>
+    </div>
+    <div class="menu-tabs">
+      <button class="tab active" onclick="filterMenu('all',this)">All</button>
+      <button class="tab" onclick="filterMenu('Indian',this)">🍛 Indian</button>
+      <button class="tab" onclick="filterMenu('Italian',this)">🍕 Italian</button>
+    </div>
+  </div>
+  <div class="menu-grid" id="menuGrid">
+    <div class="loading">⏳ Loading menu from database...</div>
+  </div>
+</section>
+
+<!-- LIVE STATS (from DB) -->
+<div class="stats-bar" id="stats">
+  <div class="stat-box"><div class="val" id="stat-revenue">—</div><div class="lbl">Revenue (Completed)</div></div>
+  <div class="stat-box"><div class="val" id="stat-orders">—</div><div class="lbl">Total Orders</div></div>
+  <div class="stat-box"><div class="val" id="stat-customers">—</div><div class="lbl">Customers</div></div>
+  <div class="stat-box"><div class="val" id="stat-rating">—</div><div class="lbl">Avg Rating</div></div>
+</div>
+
+<!-- RESERVATION (saves to DB) -->
+<section class="reservation" id="reservation">
+  <div class="res-grid">
+    <div class="res-info">
+      <div class="section-tag" style="color:var(--flame)">Book Ahead</div>
+      <h2 style="color:var(--ink)">Reserve Your<br/><span>Table Today</span></h2>
+      <p>Whether it's a family dinner, date night, or a business lunch — we'll have your table ready.</p>
+      <div class="contact-item"><div class="contact-icon">📍</div>Spice Hub, Vile Parle (W), Mumbai - 400056</div>
+      <div class="contact-item"><div class="contact-icon">📍</div>Pizza World, Andheri (W), Mumbai - 400058</div>
+      <div class="contact-item"><div class="contact-icon">📞</div>+91 99887 76655 / +91 88776 65544</div>
+      <div class="contact-item"><div class="contact-icon">🕐</div>Open daily: 11:00 AM – 11:00 PM</div>
+    </div>
+    <div class="res-form">
+      <h3>Make a Reservation</h3>
+      <div class="form-row">
+        <div class="form-group"><label>First Name</label><input type="text" id="res-fname" placeholder="Rahul"/></div>
+        <div class="form-group"><label>Last Name</label><input type="text" id="res-lname" placeholder="Sharma"/></div>
+      </div>
+      <div class="form-group"><label>Phone Number</label><input type="tel" id="res-phone" placeholder="+91 98765 43210"/></div>
+      <div class="form-group">
+        <label>Restaurant</label>
+        <select id="res-restaurant">
+          <option value="">Loading...</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Schedule</label>
+          <select id="res-schedule">
+            <option value="Lunch">Lunch (12pm–3pm)</option>
+            <option value="Evening">Evening (5pm–8pm)</option>
+            <option value="Dinner" selected>Dinner (7pm–11pm)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Guests</label>
+          <select id="res-guests">
+            <option value="2">1–2 Guests</option>
+            <option value="4">3–4 Guests</option>
+            <option value="6">5–8 Guests</option>
+            <option value="10">9+ Guests</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn-primary" style="width:100%;justify-content:center" onclick="submitReservation()">Confirm Reservation</button>
+      <div class="success-msg" id="res-success">✅ Reservation saved to database!</div>
+    </div>
+  </div>
+</section>
+
+<!-- REVIEWS (live from DB) -->
+<section class="reviews" id="reviews">
+  <div class="section-tag">From Our Database</div>
+  <h2>What People <span>Are Saying</span></h2>
+  <div class="reviews-grid" id="reviewsGrid">
+    <div class="loading">⏳ Loading reviews from database...</div>
+  </div>
+</section>
+
+<footer>
+  <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem">
+    <div class="nav-logo">SpiceHub🍛</div>
+    <p style="color:var(--muted);font-size:0.9rem">Authentic Indian & Italian cuisine across Mumbai</p>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2025 SpiceHub Group · Built by E006 · E011 · E022 · DBMS Mini Project</p>
+    <p style="color:var(--teal);font-size:0.8rem">🟢 Connected to MySQL restaurant_db</p>
+  </div>
+</footer>
+
+<div id="toast"></div>
+
+<script>
+const API = 'http://localhost:3000/api';
+const EMOJIS = { Indian: '🍛', Italian: '🍕' };
+const COLORS = { Indian: 'badge-indian', Italian: 'badge-italian' };
+let allMenuItems = [];
+
+// ── Toast ──────────────────────────────────────────────────────────────────
+function showToast(msg, type = 'normal') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = type === 'success' ? 'show success' : 'show';
+  setTimeout(() => t.className = '', 2800);
+}
+
+// ── Load Menu from DB ──────────────────────────────────────────────────────
+async function loadMenu() {
+  try {
+    const res = await fetch(`${API}/menu`);
+    allMenuItems = await res.json();
+    renderMenu(allMenuItems);
+  } catch (e) {
+    document.getElementById('menuGrid').innerHTML =
+      '<div class="loading" style="color:#ff6b6b">❌ Could not connect to server. Make sure Node.js server is running.</div>';
+  }
+}
+
+function renderMenu(items) {
+  const grid = document.getElementById('menuGrid');
+  if (!items.length) { grid.innerHTML = '<div class="loading">No items found.</div>'; return; }
+  grid.innerHTML = items.map(item => `
+    <div class="menu-card" data-cat="${item.Cuisine_Type}">
+      <div class="menu-card-img">${EMOJIS[item.Cuisine_Type] || '🍽️'}</div>
+      <div class="menu-card-body">
+        <div class="menu-card-top">
+          <div class="menu-card-name">${item.Item_Name}</div>
+          <div class="menu-card-price">₹${item.Price}</div>
+        </div>
+        <div class="menu-card-desc">From ${item.Restaurant_Name} · ${item.Cuisine_Type} cuisine</div>
+        <div class="menu-card-footer">
+          <span class="menu-badge ${COLORS[item.Cuisine_Type] || ''}">${item.Cuisine_Type}</span>
+          <button class="add-btn" onclick="showToast('${item.Item_Name} added to cart! 🛒')">+</button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function filterMenu(cat, btn) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  renderMenu(cat === 'all' ? allMenuItems : allMenuItems.filter(i => i.Cuisine_Type === cat));
+}
+
+// ── Load Stats from DB ─────────────────────────────────────────────────────
+async function loadStats() {
+  try {
+    const res = await fetch(`${API}/stats`);
+    const data = await res.json();
+    document.getElementById('stat-revenue').textContent = data.total_revenue ? `₹${Number(data.total_revenue).toLocaleString()}` : '₹0';
+    document.getElementById('stat-orders').textContent = data.total_orders || 0;
+    document.getElementById('stat-customers').textContent = data.total_customers || 0;
+    document.getElementById('stat-rating').textContent = data.avg_rating ? Number(data.avg_rating).toFixed(1) + '★' : 'N/A';
+    document.getElementById('hero-orders').textContent = data.total_orders || 0;
+    document.getElementById('hero-customers').textContent = data.total_customers || 0;
+    document.getElementById('hero-rating').textContent = data.avg_rating ? Number(data.avg_rating).toFixed(1) + '★' : 'N/A';
+  } catch (e) { console.error('Stats error:', e); }
+}
+
+// ── Load Restaurants for dropdown ─────────────────────────────────────────
+async function loadRestaurants() {
+  try {
+    const res = await fetch(`${API}/restaurants`);
+    const data = await res.json();
+    const sel = document.getElementById('res-restaurant');
+    sel.innerHTML = data.map(r => `<option value="${r.Restaurant_ID}">${r.Restaurant_Name} — ${r.Restaurant_Location}</option>`).join('');
+  } catch (e) { document.getElementById('res-restaurant').innerHTML = '<option value="101">Spice Hub</option><option value="102">Pizza World</option>'; }
+}
+
+// ── Load Reviews from DB ───────────────────────────────────────────────────
+async function loadReviews() {
+  try {
+    const res = await fetch(`${API}/reviews`);
+    const data = await res.json();
+    const colors = ['linear-gradient(135deg,#FF4D1C,#FFB800)', 'linear-gradient(135deg,#00C9B1,#006b9f)', 'linear-gradient(135deg,#A8E63D,#2a7000)'];
+    const grid = document.getElementById('reviewsGrid');
+    if (!data.length) { grid.innerHTML = '<div class="loading">No reviews yet.</div>'; return; }
+    grid.innerHTML = data.map((r, i) => `
+      <div class="review-card">
+        <div class="stars">${'★'.repeat(r.Rating)}${'☆'.repeat(5 - r.Rating)}</div>
+        <div class="review-text">"${r.Comments}"</div>
+        <div class="review-author">
+          <div class="author-avatar" style="background:${colors[i % colors.length]}">${r.First_Name[0]}</div>
+          <div>
+            <div class="author-name">${r.First_Name} ${r.Last_Name}</div>
+            <div class="author-loc">${r.Restaurant_Name}</div>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  } catch (e) { document.getElementById('reviewsGrid').innerHTML = '<div class="loading" style="color:#ff6b6b">❌ Could not load reviews.</div>'; }
+}
+
+// ── Submit Reservation to DB ───────────────────────────────────────────────
+async function submitReservation() {
+  const firstName = document.getElementById('res-fname').value.trim();
+  const lastName  = document.getElementById('res-lname').value.trim();
+  const phone     = document.getElementById('res-phone').value.trim();
+  const restaurantId = document.getElementById('res-restaurant').value;
+  const scheduleType = document.getElementById('res-schedule').value;
+  const noOfPeople   = document.getElementById('res-guests').value;
+
+  if (!firstName || !lastName || !phone) { showToast('⚠️ Please fill in all fields'); return; }
+
+  try {
+    const res = await fetch(`${API}/reservation`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ firstName, lastName, phone, restaurantId, scheduleType, noOfPeople })
+    });
+    const data = await res.json();
+    if (data.success) {
+      document.getElementById('res-success').style.display = 'block';
+      showToast('✅ Reservation saved to database!', 'success');
+      loadStats();
+    } else {
+      showToast('❌ Error: ' + data.error);
+    }
+  } catch (e) {
+    showToast('❌ Server not reachable. Is Node.js running?');
+  }
+}
+
+// ── Init ───────────────────────────────────────────────────────────────────
+loadMenu();
+loadStats();
+loadRestaurants();
+loadReviews();
+</script>
+</body>
+</html>
